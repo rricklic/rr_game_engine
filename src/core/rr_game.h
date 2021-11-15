@@ -2,7 +2,6 @@
 #define RR_GAME_H
 
 #include "graphics/graphics_engine.h"
-/*#include "core/game_layer.h"*/
 #include "event/rr_event.h"
 #include "room/rr_room.h"
 #include "input/rr_input.h"
@@ -11,11 +10,6 @@
 
 /**
  * Controls the game based on the various game assets (objects, rooms, etc...)
- * 
- * 
- * 
- * 
- * 
  */ 
 
 /**
@@ -36,34 +30,7 @@ typedef struct rr_game_funcs_t {
 */
 
 rr_game_t
-rr_game_create(
-    int screen_width,
-    int screen_height
-    /*
-    ,
-    void (*init)(rr_game_t rr_game),
-    void (*handle_input)(rr_game_t rr_game),
-    void (*update)(rr_game_t rr_game, float dt),
-    void (*render)(rr_game_t rr_game, float frame_percent)
-    */);
-
-/*
-rr_game_t
-rr_game_create2(
-    int screen_width,
-    int screen_height);
-*/
-
-/*
-void
-rr_game_add_layer(rr_game_t rr_game, game_layer_t *(*init_layer)());
-*/
-
-//TODO:
-/*
-void
-rr_game_remove_layer(rr_game_t rr_game, game_layer_t *(*init_layer)());
-*/
+rr_game_create(int screen_width, int screen_height);
 
 void
 rr_game_event_subscribe(

@@ -1,38 +1,18 @@
 #include "core/rr_game.h"
 #include "core/game_layer.h"
-//#include "character/character.h"
-//#include "graphics/texture_manager.h"
-//#include "graphics/primitives.h"
 #include "graphics/graphics_engine.h"
 #include "graphics/text_renderer.h"
 #include "input/rr_input.h"
 #include "timer/timer.h"
-
 #include "event/rr_event_system.h"
-
-
-//#include "camera/camera.h"
 #include "types/types_basic.h"
 
 /* TODO: dialog text at different speed */
 
-/**
- * TODO: game_state
- * TODO: game_event / game_event_hander
- *     event --calls--> function_callback
- * 
- */
-
-/* TODO: dynamic array of game_layer_t pointers */
-
-/* TODO: add "initial game state" and support transitioning */
-// game_state_t *game_state; 
-// stack_t *game_state_stack;
-
 #define MAX_DT 0.25f
 #define DT_STEP 0.01f
 
-/* TODO: pass in screen dimensions and target FPS; use to control rendering */
+/* TODO: pass in target FPS; use to control rendering */
 #define SCREEN_FPS 60
 #define SCREEN_TICKS_PER_FRAME 1000.f / SCREEN_FPS
 
@@ -42,7 +22,6 @@ struct rr_game_t {
     graphics_engine_t *graphics_engine;
     ticktimer_t *timer;
     rr_input_t rr_input;
-    /*game_layer_t *game_layers[10];*/ // TODO: //rr_dynamic_array(game_layer_t) game_layers;
     rr_event_system_t rr_event_system;
     rr_room_t rr_room;
 };
@@ -89,7 +68,6 @@ rr_game_destroy(rr_game_t rr_game)
     }
 }
 
-/* Default event handler */
 static void
 rr_game_event_handler(rr_game_t rr_game)
 {
@@ -107,7 +85,6 @@ rr_game_event_subscribe(
     rr_event_system_subscribe(rr_game->rr_event_system, subscriber, rr_event_type, target_id, func);
 }
 
-/* Default handle_input */
 static void
 rr_game_handle_input(rr_game_t rr_game)
 {
@@ -163,16 +140,7 @@ rr_game_handle_input(rr_game_t rr_game)
 }
 
 rr_game_t
-rr_game_create(
-    int screen_width, 
-    int screen_height
-    /*
-    ,
-    void (*init)(rr_game_t rr_game),
-    void (*handle_input)(rr_game_t rr_game),
-    void (*update)(rr_game_t rr_game, float dt),
-    void (*render)(rr_game_t rr_game, float frame_percent)
-    */)
+rr_game_create(int screen_width, int screen_height)
 {
     rr_game_t rr_game;
 
@@ -210,46 +178,11 @@ rr_game_create(
         return NULL;
     }
 
+    /* TODO: move to rr_game_run */
     rr_game->is_running = 1;
 
-    /*
-    rr_game->init = init ? init : rr_game_init;
-    rr_game->handle_input = handle_input ? handle_input : rr_game_handle_input;
-    rr_game->update = update ? update : rr_game_update;
-    rr_game->render = render ? render :rr_game_render;
-    */
-
-    //rr_game->game_layer = NULL;
-
-/*
-    for (int i = 0; i < 10; i++) {
-        rr_game->game_layers[i] = NULL;
-    }    
-*/
-
     return rr_game;
 }
-
-#ifdef DO_NOT_COMPILE
-rr_game_t
-rr_game_create2(
-    int screen_width,
-    int screen_height)
-{
-    rr_game_t rr_game = rr_game_create(screen_width, screen_height, NULL, NULL, NULL, NULL);
-
-    /*
-    game_layer_t *game_layer = init_layer();
-    if (!game_layer) {
-        free(rr_game);
-        return NULL;
-    }
-    rr_game->game_layer = game_layer;
-    */
-    return rr_game;
-}
-#endif
-
 
 static float_t
 rr_game_calc_dt(ticktimer_t *timer)
@@ -259,22 +192,15 @@ rr_game_calc_dt(ticktimer_t *timer)
     return dt;
 }
 
-// TODO: need the concept of a engine "level" or "screen"
-//       a "level" can change to another level based on some event
-//       previous levels can be stacked or destroyed
 /*
     1. calc dt
     2. handle input
-    3. update
-    4. render
+    3. step
+    4. draw
 */
 void
 rr_game_run(rr_game_t rr_game)
 {
-    #ifdef RR_DEBUG
-        uint_t frames_count = 0;
-        float_t total_time = 0.f;        
-    #endif
     float_t dt;
     float_t dt_accumulator = 0.f;
     float_t frame_percent;
@@ -283,40 +209,24 @@ rr_game_run(rr_game_t rr_game)
 
     while (rr_game->is_running) {
         dt = rr_game_calc_dt(rr_game->timer);
-        #ifdef RR_DEBUG
-            frames_count++;
-            total_time += dt;
-        #endif
         if (dt > MAX_DT) {
             dt = MAX_DT;
         }
         dt_accumulator += dt;
 
-        /* TODO: call update for array of layers */
         while (dt_accumulator >= DT_STEP) {
             /* TODO: previous_state = current_state */
             rr_game_handle_input(rr_game);
             rr_event_system_handle_events(rr_game->rr_event_system);
-
             rr_game_on_room_step(rr_game, DT_STEP);
-
             dt_accumulator -= DT_STEP;
         }
         
-        // TODO: interpolate from previous_state and current_state using frame_percent, render at that interpolated position
         frame_percent = dt_accumulator / DT_STEP;
 
         render_clear_color(rr_game->graphics_engine->renderer, COLOR_BLACK);
         rr_game_on_room_draw(rr_game, frame_percent);
 
-        #ifdef RR_DEBUG
-            /* TODO: render_debugging() */
-            int screen_width, screen_height;
-            char buf[100];
-            sprintf(buf, "FPS: %f", (frames_count/total_time));
-            graphics_get_window_size(rr_game->graphics_engine, &screen_width, &screen_height);
-            text_renderer_text(rr_game->graphics_engine->renderer, buf, 0, 0, screen_width, screen_height);
-        #endif
         render_show(rr_game->graphics_engine->renderer);
     }
 }
