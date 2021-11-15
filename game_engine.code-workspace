@@ -1,0 +1,69 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../game_asteroids"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"algorithm": "c",
+			"array": "c",
+			"byte_buffer.h": "c",
+			"input.h": "c",
+			"types_basic.h": "c",
+			"game_engine.h": "c",
+			"lerp.h": "c",
+			"vector_2d.h": "c",
+			"timer.h": "c",
+			"rr_api.h": "c",
+			"sdl_scancode.h": "c",
+			"graphics_engine.h": "c",
+			"stdio.h": "c",
+			"sdl_mouse.h": "c",
+			"*.tcc": "c",
+			"random": "c",
+			"primitives.h": "c",
+			"limits": "c",
+			"numeric": "c",
+			"streambuf": "c",
+			"tuple": "c",
+			"type_traits": "c",
+			"utility": "c",
+			"time.h": "c",
+			"game_layer.h": "c",
+			"particle_system.h": "c",
+			"renderer.h": "c",
+			"dynamic_array.h": "c",
+			"test_game.h": "c",
+			"layer_debug.h": "c",
+			"layer_balls.h": "c",
+			"rand.h": "c",
+			"stdlib.h": "c",
+			"cstdlib": "c",
+			"memory": "c",
+			"adt_example.h": "c",
+			"fnmatch.h": "c",
+			"complex": "cpp",
+			"cstddef": "cpp",
+			"cwchar": "cpp",
+			"cmath": "cpp",
+			"istream": "cpp",
+			"ostream": "cpp",
+			"sstream": "cpp",
+			"rr_game.h": "c",
+			"text_renderer.h": "c",
+			"rr_object.h": "c",
+			"glib.h": "c",
+			"rr_event.h": "c",
+			"object_ship.h": "c",
+			"rr_texture.h": "c",
+			"rr_sprite.h": "c",
+			"rr_room.h": "c"
+		},
+		"C_Cpp.default.includePath": ["./src", "/usr/include/SDL2", "/usr/include/glib-2.0", "/usr/lib/x86_64-linux-gnu/glib-2.0/include"],
+		"C_Cpp.default.defines":["RR_ENGINE_SDL", "RR_DEBUG"]
+	}
+}

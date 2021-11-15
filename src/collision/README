@@ -1,0 +1,3 @@
+GOAL: Continuous collision detection
+
+discrete collision detection will always have the limitation of tunneling being a possibility

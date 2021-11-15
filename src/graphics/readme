@@ -1,0 +1,4 @@
+interfaces/macros to implementation specific calls
+    - SDL
+    - OpenGL
+    - other
